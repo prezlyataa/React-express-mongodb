@@ -1,39 +1,40 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import './App.scss';
 
-class App extends Component {
+const API = 'http://localhost:5000/express';
 
-    state = {
-        data: null
-    };
+class App extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: null,
+            loading: true
+        };
+    }
 
     componentDidMount() {
-        // Call our fetch function below once the component mounts
-        this.callBackendAPI()
-            .then(res => this.setState({ data: res.express }))
-            .catch(err => console.log(err));
+        axios.get(API)
+            .then(res => { this.setState({data: res.data, loading: false}) })
+            .catch(error => { console.error(error) })
     }
-    // Fetches our GET route from the Express server. (Note the route we are fetching matches the GET route from server.js
-    callBackendAPI = async () => {
-        const response = await fetch('/express');
-        const body = await response.json();
 
-        if (response.status !== 200) {
-            throw Error(body.message)
+    content = () => {
+        if(!this.state.loading) {
+            return <p className="App-intro">{this.state.data.express}</p>
         }
-        return body;
     };
 
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-          <p className="App-intro">{this.state.data}</p>
-      </div>
-    );
-  }
+    render() {
+        return (
+            <div className="App">
+                <header className="App-header">
+                  <h1 className="App-title">Welcome to React</h1>
+                </header>
+                {this.content()}
+            </div>
+        );
+    }
 }
 
 export default App;
