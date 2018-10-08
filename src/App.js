@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import './App.scss';
 
-const API = 'http://localhost:5000/express';
+const API = 'http://localhost:5000/persons';
 
 class App extends Component {
     constructor(props) {
@@ -21,11 +21,18 @@ class App extends Component {
 
     content = () => {
         if(!this.state.loading) {
-            return <p className="App-intro">{this.state.data.express}</p>
+            return (
+                <div>
+                    {this.state.data.map((person, idx) => {
+                        return (<li key={idx}>{person.name}</li>)
+                    })}
+                </div>
+            );
         }
     };
 
     render() {
+        console.log(this.state.data);
         return (
             <div className="App">
                 <header className="App-header">
