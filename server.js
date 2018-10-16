@@ -24,20 +24,41 @@ app.get('/express', (req, res) => {
     res.send({ express: 'YOUR EXPRESS BACKEND IS CONNECTED TO REACT' });
 });
 
-app.get('/persons', (req, res) => {
-    // Person.find()
-    //     .then(data => {
-    //         res.status(200).send({ persons: data })
-    //     })
-    //     .catch(err => {
-    //         res.status(500).send({ message: err.message })
-    //     })
-    connection.db.collection('persons', (err, collection) => {
-        collection.find({})
-            .toArray((err, data) => {
-                res.status(200).send(data)
-            })
+// app.get('/persons', (req, res) => {
+//     Person.find({})
+//         .then(data => {
+//             res.status(200).send(data)
+//         })
+//         .catch(err => {
+//             res.status(500).send({ message: err.message })
+//         })
+//     // connection.db.collection('persons', (err, collection) => {
+//     //     collection.find({})
+//     //         .toArray((err, data) => {
+//     //             res.status(200).send(data)
+//     //         })
+//     // });
+// });
+
+app.get('/persons', (req, res, next) => {
+    Person.find((err, persons) => {
+        if (err) return next(err);
+        res.json(persons);
     });
 });
+
+app.post('/persons', (req, res, next) => {
+    Person.create(req.body, (err, person) => {
+        if (err) return next(err);
+        res.json(person);
+    });
+});
+
+// app.get(`persons/:id`, (req, res, next) => {
+//     Person.findById(req.params.id, (err, person) => {
+//         if (err) return next(err);
+//         res.json(person);
+//     });
+// });
 
 app.listen(PORT, () => console.log(`Server listenisng on port: ${PORT}`));

@@ -16,15 +16,28 @@ class App extends Component {
     componentDidMount() {
         axios.get(API)
             .then(res => { this.setState({data: res.data, loading: false}) })
-            .catch(error => { console.error(error) })
+            .catch(error => { console.error(error) });
     }
+
+    addPerson = () => {
+        axios.post(API, {
+            name: 'Fred',
+            age: 28
+        })
+            .then(res => {
+                console.log(res);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    };
 
     content = () => {
         if(!this.state.loading) {
             return (
                 <div>
                     {this.state.data.map((person, idx) => {
-                        return (<li key={idx}>{person.name}</li>)
+                        return (<p key={idx}>{idx}) name: {person.name} | age: {person.age}</p>)
                     })}
                 </div>
             );
